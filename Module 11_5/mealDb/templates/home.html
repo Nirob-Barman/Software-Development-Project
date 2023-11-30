@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+<!-- {% load static %} -->
+{% block content%}
+<div class="text-center">
+    {{block.super}}
+</div>
+<h1 class="text-center">Home page</h1>
+<img src="{% static 'banner.avif' %}" class="img-fluid" alt="Banner">
+{% endblock %}
