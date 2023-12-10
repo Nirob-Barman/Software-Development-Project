@@ -1,7 +1,53 @@
 {% extends 'base.html' %}
 
-
 {% block body %}
-<h1>Home Page</h1>
-{% endblock %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Banner or Header -->
+            <div class="text-center mb-4">
+                <h1>Welcome to Authentication Project</h1>
+                <p>This is a secure platform to manage your user account and authentication.</p>
+            </div>
 
+            <!-- Features Section -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center mb-3">Key Features</h2>
+
+                    <div class="mb-3">
+                        <h4>User Profile Management</h4>
+                        <p>Update your user profile information easily.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h4>Password Management</h4>
+                        <p>Change your password securely using our password management tools.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h4>Secure Authentication</h4>
+                        <p>Enjoy a secure authentication process to protect your account.</p>
+                    </div>
+
+                    <!-- Add more features as needed -->
+
+                </div>
+            </div>
+
+            <!-- Additional Information or Links -->
+            <div class="mt-4">
+                <p>Explore additional information:</p>
+
+                <div class="text-center mb-3">
+                    <a href="{% url 'profile' %}" class="btn btn-success">View Profile</a>
+                </div>
+
+                <!-- Add more links or information as needed -->
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
