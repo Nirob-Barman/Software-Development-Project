@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap px-5 pt-3 align-items-center">
+    <div class="col-6">
+        <h1 class="text-center">Welcome To My Blog</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut distinctio error architecto in ipsum quod quos voluptatem temporibus, aliquam maxime, incidunt odio accusantium optio doloribus hic blanditiis doloremque nam qui. Expedita inventore aspernatur, aperiam rerum voluptates sequi quo delectus at fuga molestias officia quas tempora quia eum tenetur quasi nulla sit odit saepe nam. Magnam, saepe. Quae impedit voluptas sit nam unde minus nostrum, rerum at debitis ut maxime autem illum qui, sequi nobis. Ipsum, praesentium voluptate. Hic ullam commodi doloremque deleniti. Fuga ab labore minus blanditiis? Officia unde maxime, alias mollitia eveniet voluptates minima? Quisquam quam maiores maxime voluptate.</p>
+    </div>
+    <div class="col-6">
+        <img src="{% static 'header.webp' %}" class="img-fluid" alt="">
+    </div>
+</div>
+
+
+
+<div class="d-flex flex-wrap p-4">
+    <div class="col-2 bg-white p-2">
+        <h1 class="text-center">Categories</h1>
+        {% for category in categories %}
+            <div class="form-check">
+                <input class="form-check-input" 
+                type="radio" 
+                name="category" 
+                id="{{category.id}}">
+                <label class="form-check-label" for="{{category.id}}">
+                    <a class="text-decoration-none text-dark" href="{% url 'category_wise_posts' category.slug %}">{{category.name}}</a>
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-10">
+        <h1 class="text-center">{{data|length}} Posts Found</h1>
+        <div class="d-flex flex-wrap">
+        
+            {% for post in data %}
+            <div class="col-sm-3 mx-2">
+                <div class="card mx-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{post.title}}</h5>
+                        <p class="card-text">{{post.content|slice:":100"}}.</p>
+                        <p>Author: {{post.author.first_name}} {{post.author.last_name}}</p>
+                        <p>Category:
+                            {% for category in post.category.all %}
+                            <button class="btn btn-primary btn-sm m-2" disabled>{{category.name}}</button>
+                            {% endfor %}
+                        </p>
+                        <!-- <a href="{% url 'editPost' post.id %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'deletePost' post.id %}" class="btn btn-danger">Delete</a> -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        
+        </div>
+    </div>
+</div>
+
+{% endblock %}

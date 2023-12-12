@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div>
+    <a href="{% url 'edit_profile' %}" class="btn btn-warning">Edit your profile</a>
+</div>
+
+<div class="d-flex flex-wrap justify-content-center px-5">
+    {% for post in data %}
+    <div class="col-sm-3 mx-2">
+        <div class="card mx-2">
+            <div class="card-body">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.content|slice:":100"}}.</p>
+                <p>Author: {{post.author.first_name}} {{post.author.last_name}}</p>
+                <p>Category:
+                    {% for category in post.category.all %}
+                    <button class="btn btn-primary btn-sm m-2" disabled>{{category.name}}</button>
+                    {% endfor %}
+                </p>
+                <a href="{% url 'editPost' post.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'deletePost' post.id %}" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
