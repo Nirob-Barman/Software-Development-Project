@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container">
+    <h1 class="text-center">Musician List: {{musicians|length}}</h1>
+
+    <!-- <div>
+        <ul class="list-unstyled text-center mb-3">
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=id" class="btn btn-primary">Sort Asc ID</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=id" class="btn btn-primary">Sort Desc ID</a>
+            </li>
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=first_name" class="btn btn-primary">Sort Asc
+                    First Name</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=first_name" class="btn btn-primary">Sort
+                    Desc First Name</a>
+            </li>
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=last_name" class="btn btn-primary">Sort Asc
+                    Last Name</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=last_name" class="btn btn-primary">Sort
+                    Desc Last Name</a>
+            </li>
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=email" class="btn btn-primary">Sort Asc
+                    Email</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=email" class="btn btn-primary">Sort Desc
+                    Email</a>
+            </li>
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=phone_number" class="btn btn-primary">Sort
+                    Asc Phone Number</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=phone_number" class="btn btn-primary">Sort
+                    Desc Phone Number</a>
+            </li>
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field=instrument_type" class="btn btn-primary">Sort
+                    Asc Instrument Type</a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field=instrument_type" class="btn btn-primary">Sort
+                    Desc Instrument Type</a>
+            </li>
+        </ul>
+    </div> -->
+
+    <div>
+        <ul class="list-unstyled text-center mb-3">
+            {% for field, label in sort_field_options.items %}
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'musician_list' %}?sort_order=asc&amp;sort_field={{ field }}" class="btn btn-primary">Sort
+                    Asc 
+                    <!-- {{ field|title }} -->
+                    {{ label }}
+                </a>
+                <a href="{% url 'musician_list' %}?sort_order=desc&amp;sort_field={{ field }}" class="btn btn-primary">Sort
+                    Desc 
+                    <!-- {{ field|title }} -->
+                    {{ label }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <!-- Search form -->
+    <div class="text-center mb-3">
+        <form method="get" action="{% url 'musician_list' %}">
+            {{ search_form | crispy }}
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Instrument Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for musician in musicians %}
+            <tr>
+                <td>{{ musician.id }}</td>
+                <td>{{ musician.first_name }}</td>
+                <td>{{ musician.last_name }}</td>
+                <td>{{ musician.email }}</td>
+                <td>{{ musician.phone_number }}</td>
+                <td>{{ musician.instrument_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

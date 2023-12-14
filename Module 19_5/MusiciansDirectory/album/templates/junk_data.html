@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <ul class="list-unstyled text-center mb-3">
+            {% for field in ['id', 'album_name', 'musicican', 'release_date', 'rating'] %}
+            <li class="d-inline-block mb-2">
+                <a href="{% url 'album_list' %}?sort_order=asc&amp;sort_field={{ field }}" class="btn btn-primary">Sort
+                    Asc {{ field|title }}</a>
+                <a href="{% url 'album_list' %}?sort_order=desc&amp;sort_field={{ field }}" class="btn btn-primary">Sort
+                    Desc {{ field|title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
