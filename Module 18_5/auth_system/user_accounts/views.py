@@ -5,16 +5,18 @@ from django.contrib.auth import login, authenticate, logout, update_session_auth
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
 # Create your views here.
+
+
 def home(request):
-    return render(request,'home.html',{'title':'Home Page', 'button_text':'Home', 'user':request.user})
+    return render(request, 'home.html', {'title': 'Home Page', 'button_text': 'Home', 'user': request.user})
 
 
-@login_required
 def profile(request):
     if request.user.is_authenticated:
-        return render(request,'profile.html',{'title':'Profile Page', 'user':request.user})
+        return render(request, 'profile.html', {'title': 'Profile Page', 'user': request.user})
     else:
         return redirect('login')
+
 
 def signup(request):
     if not request.user.is_authenticated:
@@ -30,7 +32,7 @@ def signup(request):
 
         else:
             form = forms.RegisterForm()
-        return render(request,'form.html',{'form':form, 'title':'Sign Up', 'button_text':'Sign Up', 'button_class':'btn-success'})
+        return render(request, 'form.html', {'form': form, 'title': 'Sign Up', 'button_text': 'Sign Up', 'button_class': 'btn-success'})
     else:
         # return redirect('home')
         return redirect('profile')
@@ -48,16 +50,18 @@ def user_login(request):
                 if user is not None:
                     login(request, user)
                     messages.success(request, 'Logged In Successfully')
-                    messages.info(request, f"You are now logged in as {username}")
+                    messages.info(
+                        request, f"You are now logged in as {username}")
                     # return redirect('home')
                     return redirect('profile')
 
         else:
             form = AuthenticationForm()
-        return render(request,'form.html',{'form':form, 'title':'Login', 'button_text':'Login', 'button_class':'btn-primary'})
+        return render(request, 'form.html', {'form': form, 'title': 'Login', 'button_text': 'Login', 'button_class': 'btn-primary'})
     else:
         # return redirect('home')
         return redirect('profile')
+
 
 def user_logout(request):
     logout(request)
@@ -73,16 +77,17 @@ def password_change(request):
             if form.is_valid():
                 user = form.save()
                 update_session_auth_hash(request, user)  # Important!
-                messages.success(request, 'Your password was successfully updated!')
+                messages.success(
+                    request, 'Your password was successfully updated!')
                 # return redirect('home')
                 return redirect('profile')
             else:
                 messages.error(request, 'Please correct the error below.')
-        return render(request,'form.html',{'form':form, 'title':'Change Your Password', 'button_text':'Change Password', 'button_class':'btn-warning'})
+        return render(request, 'form.html', {'form': form, 'title': 'Change Your Password', 'button_text': 'Change Password', 'button_class': 'btn-warning'})
     else:
         # return redirect('home')
         return redirect('profile')
-    
+
 
 def password_change_without_old_password(request):
     if request.user.is_authenticated:
@@ -92,7 +97,8 @@ def password_change_without_old_password(request):
             if form.is_valid():
                 user = form.save()
                 update_session_auth_hash(request, user)  # Important!
-                messages.success(request, 'Your password was successfully updated!')
+                messages.success(
+                    request, 'Your password was successfully updated!')
                 # return redirect('home')
                 return redirect('profile')
             else:
