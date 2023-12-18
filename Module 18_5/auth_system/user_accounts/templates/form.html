@@ -22,14 +22,14 @@
         {{field|as_crispy_field}}
     </div>
     {% endfor %} -->
-    
+
     {% for field in form %}
     <div class="form-group">
         {{field.label_tag}}
         {{field}}
         <!-- {{field.errors}} -->
         {{field.errors|striptags}}
-        
+
         <!-- {% if field.help_text %}
         <small class="form-text text-muted">{{field.help_text}}</small>
         {% endif %} -->
@@ -37,7 +37,7 @@
     {% endfor %}
 
     <input class="btn {{button_class}} mt-2" type="submit" value="{{button_text}}">
-    
+
     {% if button_text == "Login" %}
     <p class="text-center">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
     {% elif button_text == "Sign Up" %}
