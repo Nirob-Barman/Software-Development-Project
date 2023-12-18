@@ -1,0 +1,22 @@
+<footer class="mt-5">
+    <div class="container text-center">
+        <p>&copy; {% now "Y" %} Car Hub. All rights reserved.</p>
+        <p>Today is {% now "l, F j, Y" %}</p>
+    </div>
+</footer>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    footer {
+        flex-shrink: 0;
+    }
+</style>
