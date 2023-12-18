@@ -4,6 +4,7 @@ from . import forms
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -11,6 +12,7 @@ def home(request):
     return render(request, 'home.html', {'title': 'Home Page', 'button_text': 'Home', 'user': request.user})
 
 
+@login_required(login_url='login')
 def profile(request):
     if request.user.is_authenticated:
         return render(request, 'profile.html', {'title': 'Profile Page', 'user': request.user})
@@ -53,7 +55,13 @@ def user_login(request):
                     messages.info(
                         request, f"You are now logged in as {username}")
                     # return redirect('home')
-                    return redirect('profile')
+                    # return redirect('profile')
+
+                    # Check for the 'next' parameter
+                    next_url = request.GET.get('next', None)
+
+                    # Redirect to the intended URL or a default URL
+                    return redirect(next_url) if next_url else redirect('profile')
 
         else:
             form = AuthenticationForm()
@@ -69,6 +77,7 @@ def user_logout(request):
     return redirect('home')
 
 
+@login_required(login_url='login')
 def password_change(request):
     if request.user.is_authenticated:
         form = PasswordChangeForm(request.user)
@@ -89,6 +98,7 @@ def password_change(request):
         return redirect('profile')
 
 
+@login_required(login_url='login')
 def password_change_without_old_password(request):
     if request.user.is_authenticated:
         form = SetPasswordForm(request.user)
@@ -109,6 +119,7 @@ def password_change_without_old_password(request):
         return redirect('profile')
 
 
+@login_required(login_url='login')
 def edit_profile(request):
     if request.user.is_authenticated:
         form = forms.EditProfileForm(instance=request.user)
