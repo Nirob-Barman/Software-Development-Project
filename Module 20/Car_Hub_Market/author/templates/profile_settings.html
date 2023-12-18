@@ -12,14 +12,8 @@
                 <div class="card-body">
                     <div>
                         <!-- Display messages -->
-                        {% if messages %}
-                        {% for message in messages %}
-                        <div style="width: 50%; margin: auto;" class="alert alert-{{message.tags}} text-center"
-                            role="alert">
-                            {{message}}
-                        </div>
-                        {% endfor %}
-                        {% endif %}
+                        {% include 'messages/messages.html' %}
+
                     </div>
                     <h1 class="text-center mb-4">Welcome to Your Profile</h1>
                     <h2 class="text-center mb-4">Hello, {{ user }}</h2>
@@ -35,34 +29,11 @@
                             Password without Old Password</a>
                     </div>
 
-
-                    <!-- Add the form here -->
                     <div class="mt-4">
-                        <!-- <form style="width: 80%; margin: auto;" action="" method="post" novalidate>
-                            {% csrf_token %}
-
-                            {% if form.non_field_errors %}
-                            {% for error in form.non_field_errors %}
-                            <p class="alert alert-danger text-center">{{ error }}</p>
-                            {% endfor %}
-                            {% endif %}
-
-                            {% for field in form %}
-                            <div class="mb-3">
-                                {{ field.label_tag }}
-                                {{ field }}
-                                {{ field.errors|striptags }}
-                            </div>
-                            {% endfor %}
-                            <div class="text-center">
-                                <input class="btn btn-warning" type="submit" value="Update">
-                            </div>
-                        </form> -->
                         <div class="text-center">
                             <a href="{% url 'edit_privacy_settings' %}" class="btn btn-warning">Update User Data</a>
                         </div>
                     </div>
-                    <!-- End of the form -->
                 </div>
             </div>
         </div>
