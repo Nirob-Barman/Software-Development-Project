@@ -57,6 +57,7 @@ def signup(request):
             form = forms.RegisterForm()
         return render(request, 'form.html', {'form': form, 'title': 'Sign Up', 'button_text': 'Sign Up', 'button_class': 'btn-success'})
     else:
+        messages.info(request, 'You are already signed in')
         return redirect('home')
         # return redirect('profile')
 
@@ -69,6 +70,7 @@ class UserSignUpView(SuccessMessageMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
+            messages.info(request, 'You are already signed in')
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
 
@@ -103,6 +105,7 @@ def user_login(request):
             form = AuthenticationForm()
         return render(request, 'form.html', {'form': form, 'title': 'Login', 'button_text': 'Login', 'button_class': 'btn-primary'})
     else:
+        messages.info(request, 'You are already logged in')
         return redirect('home')
         # return redirect('profile')
 
@@ -123,6 +126,7 @@ class UserLoginView(SuccessMessageMixin, LoginView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
+            messages.info(request, 'You are already logged in')
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
 
