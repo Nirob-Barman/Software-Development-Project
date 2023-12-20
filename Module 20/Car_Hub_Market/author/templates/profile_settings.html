@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Privary Settings{% endblock %}
+{% block title %}Privacy Settings{% endblock %}
 
 {% block content %}
+
+
+<script>
+    function changeFavicon(url) {
+        var link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = url;
+    }
+
+    // Change the favicon to a new image
+    changeFavicon('{% static "images/profile.png" %}');
+</script>
+
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
