@@ -1,0 +1,16 @@
+<div>
+    {% if messages %}
+    {% for message in messages %}
+    <script>
+        // Display SweetAlert for each message
+        Swal.fire({
+            icon: '{{ message.tags }}',  // Assuming message.tags contains 'success', 'info', 'warning', or 'error'
+            title: '{{ message.tags|capfirst }}',  // Capitalize the first letter of the tag
+            text: '{{ message }}',
+            showConfirmButton: false,
+            timer: 3000  // Set the timer to automatically close the alert after 3 seconds
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+</div>
