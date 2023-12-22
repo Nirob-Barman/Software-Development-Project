@@ -1,9 +1,9 @@
 <div class="container">
     <h2 class="text-center">Brand Filter</h2>
-    <div class="btn-group d-flex justify-content-center">
-        <a class="btn btn-primary text-decoration-none" href="{% url 'home' %}">All Brands</a>
+    <div class="btn-group d-flex justify-content-center gap-1">
+        <a class="btn btn-primary text-decoration-none rounded" href="{% url 'home' %}">All Brands</a>
         {% for brand in brands %}
-        <a class="btn btn-primary text-decoration-none" href="{% url 'brands_filter' brand.name %}">{{ brand.name }}</a>
+        <a class="btn btn-primary text-decoration-none rounded" href="{% url 'brands_filter' brand.name %}">{{ brand.name }}</a>
         {% endfor %}
     </div>
 </div>
