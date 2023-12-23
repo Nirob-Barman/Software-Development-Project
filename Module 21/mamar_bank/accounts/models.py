@@ -1,25 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from .constants import ACCOUNT_TYPE, GENDER_TYPE
 # Create your models here.
 
-ACCOUNT_TYPE = (
-    ('Savings', 'Savings'),
-    ('Current', 'Current'),
-)
+# ACCOUNT_TYPE = (
+#     ('Savings', 'Savings'),
+#     ('Current', 'Current'),
+# )
 
-GENDER_TYPE = (
-    ('Male', 'Male'),
-    ('Female', 'Female'),
-    ('Other', 'Other'),
-    ('Prefer not to say', 'Prefer not to say'),
-    ('Prefer to self-describe', 'Prefer to self-describe'),
-    ('Prefer not to answer', 'Prefer not to answer'),
-    ('Prefer to not say', 'Prefer to not say'),
-    ('Prefer to not disclose', 'Prefer to not disclose'),
-    ('Prefer not to disclose', 'Prefer not to disclose'),
-    ('Prefer to disclose', 'Prefer to disclose'),
-)
+# GENDER_TYPE = (
+#     ('Male', 'Male'),
+#     ('Female', 'Female'),
+#     ('Other', 'Other'),
+#     ('Prefer not to say', 'Prefer not to say'),
+#     ('Prefer to self-describe', 'Prefer to self-describe'),
+#     ('Prefer not to answer', 'Prefer not to answer'),
+#     ('Prefer to not say', 'Prefer to not say'),
+#     ('Prefer to not disclose', 'Prefer to not disclose'),
+#     ('Prefer not to disclose', 'Prefer not to disclose'),
+#     ('Prefer to disclose', 'Prefer to disclose'),
+# )
 
 
 class UserBankAccount(models.Model):
