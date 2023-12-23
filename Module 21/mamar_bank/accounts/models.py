@@ -30,7 +30,8 @@ class UserBankAccount(models.Model):
     # In Django models, when you set null=True for a field, it means that the corresponding database column can have empty (NULL) values.
     # blank=True: This parameter is used for form validation in Django, indicating that a form can be submitted with this field left blank.
     birth_date = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=10, choices=GENDER_TYPE)
+    # gender = models.CharField(max_length=10, choices=GENDER_TYPE)
+    gender = models.CharField(max_length=50, choices=GENDER_TYPE)
     initial_deposite_date = models.DateField(auto_now_add=True)
     # balance for monetary values with a default of 0, max 12 digits, and 2 decimal places.
     balance = models.DecimalField(default=0, max_digits=12, decimal_places=2)
