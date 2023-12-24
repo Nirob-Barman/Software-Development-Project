@@ -56,6 +56,7 @@ class UserRegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         for field in self.fields:
+            # print(field)
             self.fields[field].widget.attrs.update({
 
                 'class': (
