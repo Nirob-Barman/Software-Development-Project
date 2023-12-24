@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/browse/tailwindcss@2.0.1/dist/tailwind.min.css">
 </head>
 <body>
-    <!-- {% extends 'base.html' %} {% load static %} {% block head_title %}Banking System{% endblock %} {% block content %} -->
-    
     {% if form.non_field_errors %} {% for error in form.non_field_errors %}
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-2" role="alert">
         <p class="font-bold">Error!</p>
@@ -39,8 +38,8 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.first_name.id_for_label }}">
                             {{ form.first_name.label }}
-                        </label> {{ form.first_name }} {% if form.first_name.errors %} {% for error in
-                        form.first_name.errors %}
+                        </label> {{ form.first_name }} 
+                        {% if form.first_name.errors %} {% for error in form.first_name.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -48,8 +47,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.last_name.id_for_label }}">
                             {{ form.last_name.label }}
-                        </label> {{ form.last_name }} {% if form.last_name.errors %} {% for error in form.last_name.errors
-                        %}
+                        </label> {{ form.last_name }} {% if form.last_name.errors %} {% for error in form.last_name.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -67,8 +65,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.account_type.id_for_label }}">
                             {{ form.account_type.label }}
-                        </label> {{ form.account_type }} {% if form.account_type.errors %} {% for error in
-                        form.account_type.errors %}
+                        </label> {{ form.account_type }} {% if form.account_type.errors %} {% for error in form.account_type.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -86,8 +83,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.birth_date.id_for_label }}">
                             {{ form.birth_date.label }}
-                        </label> {{ form.birth_date }} {% if form.birth_date.errors %} {% for error in
-                        form.birth_date.errors %}
+                        </label> {{ form.birth_date }} {% if form.birth_date.errors %} {% for error in form.birth_date.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -97,8 +93,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.password1.id_for_label }}">
                             {{ form.password1.label }}
-                        </label> {{ form.password1 }} {% if form.password1.errors %} {% for error in form.password1.errors
-                        %}
+                        </label> {{ form.password1 }} {% if form.password1.errors %} {% for error in form.password1.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -106,8 +101,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.password2.id_for_label }}">
                             {{ form.password2.label }}
-                        </label> {{ form.password2 }} {% if form.password2.errors %} {% for error in form.password2.errors
-                        %}
+                        </label> {{ form.password2 }} {% if form.password2.errors %} {% for error in form.password2.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -119,8 +113,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.street_address.id_for_label }}">
                             {{ form.street_address.label }}
-                        </label> {{ form.street_address }} {% if form.street_address.errors %} {% for error in
-                        form.street_address.errors %}
+                        </label> {{ form.street_address }} {% if form.street_address.errors %} {% for error in form.street_address.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -138,8 +131,7 @@
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                             for="{{ form.postal_code.id_for_label }}">
                             {{ form.postal_code.label }}
-                        </label> {{ form.postal_code }} {% if form.postal_code.errors %} {% for error in
-                        form.postal_code.errors %}
+                        </label> {{ form.postal_code }} {% if form.postal_code.errors %} {% for error in form.postal_code.errors %}
                         <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
                         {% endfor %} {% endif %}
                     </div>
@@ -162,6 +154,5 @@
             </form>
         </div>
     </div>
-    <!-- {% endblock %} -->
 </body>
 </html>
