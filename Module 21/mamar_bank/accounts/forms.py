@@ -68,7 +68,7 @@ class UserRegistrationForm(UserCreationForm):
             })
 
 
-# update form for user profile page and address page 
+# update form for user profile page and address page
 class UserUpdateForm(forms.ModelForm):
     birth_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}))
@@ -94,7 +94,7 @@ class UserUpdateForm(forms.ModelForm):
                     'focus:bg-white focus:border-gray-500'
                 )
             })
-        # jodi user er account thake
+            # if user account is already available
         if self.instance:
             try:
                 user_account = self.instance.account
@@ -118,6 +118,7 @@ class UserUpdateForm(forms.ModelForm):
             user.save()
 
             # jodi account thake taile seta jabe user_account ar jodi account na thake taile create hobe ar seta created er moddhe jabe
+            # if account already exist then update else create it and update it
             user_account, created = UserBankAccount.objects.get_or_create(
                 user=user)
             user_address, created = UserAddress.objects.get_or_create(
