@@ -67,8 +67,7 @@ class UserRegistrationForm(UserCreationForm):
             })
 
 
-# profile ki ki jinis update korte parbe amader user
-
+# update form for user profile page and address page 
 class UserUpdateForm(forms.ModelForm):
     birth_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}))
