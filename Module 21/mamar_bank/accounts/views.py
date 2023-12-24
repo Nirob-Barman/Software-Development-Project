@@ -18,4 +18,5 @@ class UserRegistrationView(FormView):
         user = form.save()
         login(self.request, user)
         print(user)
-        return super().form_valid(form) # call the form_valid method from FormView if all the data is valid
+        # call the form_valid method from FormView if all the data is valid
+        return super().form_valid(form)
