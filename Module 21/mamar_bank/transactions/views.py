@@ -70,3 +70,49 @@ class DepositMoneyView(TransactionCreateMixin):
         )
 
         return super().form_valid(form)
+
+
+class WithdrawMoneyView(TransactionCreateMixin):
+    form_class = WithdrawForm
+    title = 'Withdraw Money'
+
+    def get_initial(self):
+        initial = {'transaction_type': WITHDRAWAL}
+        return initial
+
+    def form_valid(self, form):
+        amount = form.cleaned_data.get('amount')
+
+        self.request.user.account.balance -= form.cleaned_data.get('amount')
+        # balance = 300
+        # amount = 5000
+        self.request.user.account.save(update_fields=['balance'])
+
+        messages.success(
+            self.request,
+            f'Successfully withdrawn {"{:,.2f}".format(float(amount))}$ from your account'
+        )
+
+        return super().form_valid(form)
+
+
+class LoanRequestView(TransactionCreateMixin):
+    form_class = LoanRequestForm
+    title = 'Request For Loan'
+
+    def get_initial(self):
+        initial = {'transaction_type': LOAN}
+        return initial
+
+    def form_valid(self, form):
+        amount = form.cleaned_data.get('amount')
+        current_loan_count = Transaction.objects.filter(
+            account=self.request.user.account, transaction_type=3, loan_approve=True).count()
+        if current_loan_count >= 3:
+            return HttpResponse("You have cross the loan limits")
+        messages.success(
+            self.request,
+            f'Loan request for {"{:,.2f}".format(float(amount))}$ submitted successfully'
+        )
+
+        return super().form_valid(form)
