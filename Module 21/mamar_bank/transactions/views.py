@@ -33,7 +33,7 @@ class TransactionCreateMixin(LoginRequiredMixin, CreateView):
         return kwargs
 
     def get_context_data(self, **kwargs):
-        # passing title to template 
+        # passing title to template
         context = super().get_context_data(**kwargs)
         context.update({
             'title': self.title
@@ -56,7 +56,7 @@ class DepositMoneyView(TransactionCreateMixin):
         # if not account.initial_deposit_date:
         #     now = timezone.now()
         #     account.initial_deposit_date = now
-        
+
         account.balance += amount
         account.save(
             update_fields=[
@@ -108,10 +108,10 @@ class LoanRequestView(TransactionCreateMixin):
         amount = form.cleaned_data.get('amount')
         current_loan_count = Transaction.objects.filter(
             account=self.request.user.account, transaction_type=3, loan_approve=True).count()
-        
+
         if current_loan_count >= 3:
             return HttpResponse("You have cross the loan limits")
-        
+
         messages.success(
             self.request,
             f'Loan request for {"{:,.2f}".format(float(amount))}$ submitted successfully'
@@ -124,7 +124,7 @@ class TransactionReportView(LoginRequiredMixin, ListView):
     template_name = 'transactions/transaction_report.html'
     model = Transaction
     # display the total balance after filter the data based on start_date and end_date
-    balance = 0 
+    balance = 0
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(
