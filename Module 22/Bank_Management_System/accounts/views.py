@@ -7,8 +7,10 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views import View
 from django.contrib import messages
 
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
+
+
 class RegistrationView(FormView):
     form_class = UserRegistrationForm
     success_url = reverse_lazy('home')
@@ -41,37 +43,24 @@ class LogoutView(LogoutView):
         return reverse_lazy('home')
 
 
-class UserProfileView(View):
-    # template_name = 'accounts/profile.html'
-
-    # def get(self, request):
-    #     form = UserUpdateForm(instance=request.user)
-    #     # return render(request, 'accounts/profile.html', {'form': form})
-    #     return render(request, self.template_name, {'form': form})
-
-    # def post(self, request):
-    #     # form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
-    #     form = UserUpdateForm(request.POST, instance=request.user)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(
-    #             request, 'Your profile has been updated successfully!')
-    #         return redirect('home')
-    #     else:
-    #         print(form.errors)
-    #         # return render(request, 'accounts/profile.html', {'form': form})
-    #     # return render(request, 'accounts/profile.html', {'form': form})
-    #     return render(request, self.template_name, {'form': form})
-
+class UserProfileView(LoginRequiredMixin,View):
     template_name = 'accounts/profile.html'
 
     def get(self, request):
         form = UserUpdateForm(instance=request.user)
+        # return render(request, 'accounts/profile.html', {'form': form})
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+        # form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(
+                request, 'Your profile has been updated successfully!')
             return redirect('home')
+        else:
+            print(form.errors)
+            # return render(request, 'accounts/profile.html', {'form': form})
+        # return render(request, 'accounts/profile.html', {'form': form})
         return render(request, self.template_name, {'form': form})
