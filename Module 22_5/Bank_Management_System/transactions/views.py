@@ -103,7 +103,7 @@ class LoanRequestView(TransactionCreateMixin):
         current_loan_count = Transaction.objects.filter(
             account=self.request.user.account, transaction_type=3, loan_approve=True).count()
 
-        if current_loan_count >= 10:
+        if current_loan_count >= 3:
             return HttpResponse("You have cross the loan limits")
 
         messages.success(
