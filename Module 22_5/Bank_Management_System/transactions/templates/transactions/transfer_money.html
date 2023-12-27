@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %} {% block head_title %}{{ title }}{% endblock %} {% block content %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
-<head>
-    <title>Transfer Money</title>
-</head>
 
-<body>
     <h2>Transfer Money</h2>
     <p>Current Balance: {{ user.account.balance }} $</p>
 
@@ -14,6 +16,6 @@
         {{ form.as_p }}
         <input type="submit" value="Transfer">
     </form>
-</body>
 
-</html>
+
+{% endblock %}

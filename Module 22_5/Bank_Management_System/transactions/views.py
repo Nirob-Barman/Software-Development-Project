@@ -202,17 +202,54 @@ class TransferMoneyView(View):
         if form.is_valid():
             amount = form.cleaned_data['amount']
             to_user_id = form.cleaned_data['to_user_id']
-            print(amount)
-            print(to_user_id)
-
-            # find the to_user_id amount from UserBankAccount using filter
-            # to_user_account = get_object_or_404(
-            #     UserBankAccount, user__id=to_user_id)
-            to_user_account_qs = UserBankAccount.objects.filter(
-                user__id=to_user_id)
             
-            # return render(request, 'transactions/success.html', {'amount': amount})
-            return render(request, 'transactions/transfer_money.html', {'form': form})
+            current_user = request.user.account
+            # print("Current User Balance Before Transfer:", current_user.balance)
 
-        # If the form is not valid, render the template with the form and account balance
-        return render(request, self.template_name, {'form': form})
+            try:
+                to_user = UserBankAccount.objects.get(
+                    account_number=to_user_id)
+                print(to_user)
+                print(to_user.balance)
+                min_balance_to_transfer = 100
+                max_balance_to_transfer = 20000
+
+                if amount > current_user.balance:
+                    messages.error(
+                        request,
+                        f'You have {current_user.balance} $ in your account. '
+                        'You can not transfer more than your account balance'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+
+                if amount < min_balance_to_transfer:
+                    messages.error(
+                        request,
+                        f'You need to transfer at least {min_balance_to_transfer} $'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+
+                if amount > max_balance_to_transfer:
+                    messages.error(
+                        request,
+                        f'You can transfer at most {max_balance_to_transfer} $'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+                
+                # Deduct the amount from current user's balance
+                current_user.balance -= amount
+                current_user.save()
+                to_user.balance += amount
+                to_user.save()
+
+                messages.success(
+                    request,
+                    f'Transfer of {"{:,.2f}".format(float(amount))}$ successful'
+                )
+
+            except UserBankAccount.DoesNotExist:
+                messages.error(
+                    request, 'User account not found. Please check the account number.')
+
+            return render(request, 'transactions/transfer_money.html', {'form': form, 'title': 'Transfer Money'})
+        return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
