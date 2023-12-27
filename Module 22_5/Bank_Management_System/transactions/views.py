@@ -210,7 +210,6 @@ class TransferMoneyView(View):
                 to_user = UserBankAccount.objects.get(
                     account_number=to_user_id)
                 print(to_user)
-                print(to_user.balance)
                 min_balance_to_transfer = 100
                 max_balance_to_transfer = 20000
 
@@ -239,6 +238,26 @@ class TransferMoneyView(View):
                 # Deduct the amount from current user's balance
                 current_user.balance -= amount
                 current_user.save()
+
+                # transaction = Transaction.objects.create(
+                #     account=current_user,
+                #     amount=amount,
+                #     balance_after_transaction=current_user.balance,
+                #     # transaction_type='TRANSFER',  # Set the correct value
+                #     # loan_approve=False  # Set the correct value
+                # )
+                transaction = Transaction.objects.create(
+                    account=to_user,
+                    amount=to_user.balance,
+                    balance_after_transaction=to_user.balance,
+                    # transaction_type='TRANSFER',  # Set the correct value
+                    # loan_approve=False  # Set the correct value
+                )
+
+                # print(
+                #     f"Balance After Transaction: {transaction.balance_after_transaction}")
+
+
                 to_user.balance += amount
                 to_user.save()
 
