@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic import CreateView, ListView
@@ -13,8 +13,10 @@ from transactions.forms import (
     DepositForm,
     WithdrawForm,
     LoanRequestForm,
+    TransferMoneyForm
 )
 from transactions.models import Transaction
+from accounts.models import UserBankAccount
 
 # Create your views here.
 
@@ -177,7 +179,7 @@ class PayLoanView(LoginRequiredMixin, View):
 class LoanListView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'transactions/loan_request.html'
-    context_object_name = 'loans' 
+    context_object_name = 'loans'
 
     def get_queryset(self):
         user_account = self.request.user.account
@@ -185,3 +187,32 @@ class LoanListView(LoginRequiredMixin, ListView):
             account=user_account, transaction_type=3)
         print(queryset)
         return queryset
+
+
+class TransferMoneyView(View):
+    template_name = 'transactions/transfer_money.html'
+
+    def get(self, request):
+        form = TransferMoneyForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = TransferMoneyForm(request.POST)
+
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            to_user_id = form.cleaned_data['to_user_id']
+            print(amount)
+            print(to_user_id)
+
+            # find the to_user_id amount from UserBankAccount using filter
+            # to_user_account = get_object_or_404(
+            #     UserBankAccount, user__id=to_user_id)
+            to_user_account_qs = UserBankAccount.objects.filter(
+                user__id=to_user_id)
+            
+            # return render(request, 'transactions/success.html', {'amount': amount})
+            return render(request, 'transactions/transfer_money.html', {'form': form})
+
+        # If the form is not valid, render the template with the form and account balance
+        return render(request, self.template_name, {'form': form})

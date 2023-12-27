@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Transfer Money</title>
+</head>
+
+<body>
+    <h2>Transfer Money</h2>
+    <p>Current Balance: {{ user.account.balance }} $</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Transfer">
+    </form>
+</body>
+
+</html>
