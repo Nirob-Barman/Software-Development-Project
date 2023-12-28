@@ -83,14 +83,20 @@ class WithdrawMoneyView(TransactionCreateMixin):
         # is_bankrupt = bank_settings.is_bankrupt
         # print(f"Bank is bankrupt: {is_bankrupt}")
 
+        # Get the BankSettings object with is_bankrupt=True
+        bank_settings = BankSettings.objects.filter(is_bankrupt=True).first()
+
 
         initial = {'transaction_type': WITHDRAWAL}
         return initial
 
     def form_valid(self, form):
+        # bank_settings = BankSettings.objects.filter(is_bankrupt=True).first()
+        # Get the BankSettings object with is_bankrupt=True
+        bank_settings = BankSettings.objects.filter(is_bankrupt=True).first()
 
-        bank_settings = BankSettings.objects.get()
-        if bank_settings.is_bankrupt:
+        if bank_settings and bank_settings.is_bankrupt:
+            print("Bank is bankrupt")
             messages.error(
                 self.request,
                 'Withdrawal is not allowed. The bank is bankrupt.'
