@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic import CreateView, ListView
-from transactions.constants import DEPOSIT, WITHDRAWAL, LOAN, LOAN_PAID
+from transactions.constants import DEPOSIT, WITHDRAWAL, LOAN, LOAN_PAID, TRANSFER, RECEIVED
 from datetime import datetime
 from django.db.models import Sum
 from transactions.forms import (
@@ -17,6 +17,9 @@ from transactions.forms import (
 )
 from transactions.models import Transaction
 from accounts.models import UserBankAccount
+
+
+from core.models import BankSettings
 
 # Create your views here.
 
@@ -74,11 +77,26 @@ class WithdrawMoneyView(TransactionCreateMixin):
     form_class = WithdrawForm
     title = 'Withdraw Money'
 
+
     def get_initial(self):
+        # bank_settings = BankSettings.objects.get()
+        # is_bankrupt = bank_settings.is_bankrupt
+        # print(f"Bank is bankrupt: {is_bankrupt}")
+
+
         initial = {'transaction_type': WITHDRAWAL}
         return initial
 
     def form_valid(self, form):
+
+        bank_settings = BankSettings.objects.get()
+        if bank_settings.is_bankrupt:
+            messages.error(
+                self.request,
+                'Withdrawal is not allowed. The bank is bankrupt.'
+            )
+            return redirect(reverse_lazy('withdraw_money'))
+
         amount = form.cleaned_data.get('amount')
 
         self.request.user.account.balance -= form.cleaned_data.get('amount')
@@ -213,44 +231,45 @@ class TransferMoneyView(View):
                 min_balance_to_transfer = 100
                 max_balance_to_transfer = 20000
 
-                if amount > current_user.balance:
-                    messages.error(
-                        request,
-                        f'You have {current_user.balance} $ in your account. '
-                        'You can not transfer more than your account balance'
-                    )
-                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+                
+                # if amount < min_balance_to_transfer:
+                #     messages.error(
+                #         request,
+                #         f'You need to transfer at least {min_balance_to_transfer} $'
+                #     )
+                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
 
-                if amount < min_balance_to_transfer:
-                    messages.error(
-                        request,
-                        f'You need to transfer at least {min_balance_to_transfer} $'
-                    )
-                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
-
-                if amount > max_balance_to_transfer:
-                    messages.error(
-                        request,
-                        f'You can transfer at most {max_balance_to_transfer} $'
-                    )
-                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+                # if amount > max_balance_to_transfer and amount <= current_user.balance:
+                #     messages.error(
+                #         request,
+                #         f'You can transfer at most {max_balance_to_transfer} $'
+                #     )
+                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+                
+                # if amount > current_user.balance:
+                #     messages.error(
+                #         request,
+                #         f'You have {current_user.balance} $ in your account. '
+                #         'You can not transfer more than your account balance'
+                #     )
+                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
                 
                 # Deduct the amount from current user's balance
                 current_user.balance -= amount
                 current_user.save()
 
-                # transaction = Transaction.objects.create(
-                #     account=current_user,
-                #     amount=amount,
-                #     balance_after_transaction=current_user.balance,
-                #     # transaction_type='TRANSFER',  # Set the correct value
-                #     # loan_approve=False  # Set the correct value
-                # )
-                transaction = Transaction.objects.create(
+                transaction_from = Transaction.objects.create(
+                    account=current_user,
+                    amount=amount,
+                    balance_after_transaction=current_user.balance,
+                    transaction_type=TRANSFER,  # Set the correct value
+                    # loan_approve=False  # Set the correct value
+                )
+                transaction_to = Transaction.objects.create(
                     account=to_user,
-                    amount=to_user.balance,
+                    amount=amount,
                     balance_after_transaction=to_user.balance,
-                    # transaction_type='TRANSFER',  # Set the correct value
+                    transaction_type=RECEIVED,  # Set the correct value
                     # loan_approve=False  # Set the correct value
                 )
 
