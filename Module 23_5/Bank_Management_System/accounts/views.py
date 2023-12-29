@@ -84,7 +84,6 @@ class UserProfileView(LoginRequiredMixin,View):
         return render(request, self.template_name, {'form': form})
 
 
-
 def password_change(request):
     if request.user.is_authenticated:
         form = PasswordChangeForm(request.user)
