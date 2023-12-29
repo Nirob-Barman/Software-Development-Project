@@ -65,10 +65,10 @@ class DepositMoneyView(TransactionCreateMixin):
             ]
         )
 
-        messages.success(
-            self.request,
-            f'{"{:,.2f}".format(float(amount))}$ was deposited to your account successfully'
-        )
+        # messages.success(
+        #     self.request,
+        #     f'{"{:,.2f}".format(float(amount))}$ was deposited to your account successfully'
+        # )
 
         return super().form_valid(form)
 
@@ -108,10 +108,10 @@ class WithdrawMoneyView(TransactionCreateMixin):
         self.request.user.account.balance -= form.cleaned_data.get('amount')
         self.request.user.account.save(update_fields=['balance'])
 
-        messages.success(
-            self.request,
-            f'Successfully withdrawn {"{:,.2f}".format(float(amount))}$ from your account'
-        )
+        # messages.success(
+        #     self.request,
+        #     f'Successfully withdrawn {"{:,.2f}".format(float(amount))}$ from your account'
+        # )
 
         return super().form_valid(form)
 
