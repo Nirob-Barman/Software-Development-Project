@@ -77,7 +77,6 @@ class WithdrawMoneyView(TransactionCreateMixin):
     form_class = WithdrawForm
     title = 'Withdraw Money'
 
-
     def get_initial(self):
         # bank_settings = BankSettings.objects.get()
         # is_bankrupt = bank_settings.is_bankrupt
@@ -85,7 +84,6 @@ class WithdrawMoneyView(TransactionCreateMixin):
 
         # Get the BankSettings object with is_bankrupt=True
         bank_settings = BankSettings.objects.filter(is_bankrupt=True).first()
-
 
         initial = {'transaction_type': WITHDRAWAL}
         return initial
@@ -226,7 +224,7 @@ class TransferMoneyView(View):
         if form.is_valid():
             amount = form.cleaned_data['amount']
             to_user_id = form.cleaned_data['to_user_id']
-            
+
             current_user = request.user.account
             # print("Current User Balance Before Transfer:", current_user.balance)
 
@@ -237,29 +235,35 @@ class TransferMoneyView(View):
                 min_balance_to_transfer = 100
                 max_balance_to_transfer = 20000
 
-                
-                # if amount < min_balance_to_transfer:
-                #     messages.error(
-                #         request,
-                #         f'You need to transfer at least {min_balance_to_transfer} $'
-                #     )
-                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+                if current_user.balance <= 0:
+                    messages.error(
+                        request,
+                        'you have not enough balance to transfer'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
 
-                # if amount > max_balance_to_transfer and amount <= current_user.balance:
-                #     messages.error(
-                #         request,
-                #         f'You can transfer at most {max_balance_to_transfer} $'
-                #     )
-                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
-                
-                # if amount > current_user.balance:
-                #     messages.error(
-                #         request,
-                #         f'You have {current_user.balance} $ in your account. '
-                #         'You can not transfer more than your account balance'
-                #     )
-                #     return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
-                
+                if amount < min_balance_to_transfer:
+                    messages.error(
+                        request,
+                        f'You need to transfer at least {min_balance_to_transfer} $'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+
+                if amount > max_balance_to_transfer and amount <= current_user.balance:
+                    messages.error(
+                        request,
+                        f'You can transfer at most {max_balance_to_transfer} $'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+
+                if amount > current_user.balance:
+                    messages.error(
+                        request,
+                        f'You have {current_user.balance} $ in your account. '
+                        'You can not transfer more than your account balance'
+                    )
+                    return render(request, self.template_name, {'form': form, 'title': 'Transfer Money'})
+
                 # Deduct the amount from current user's balance
                 current_user.balance -= amount
                 current_user.save()
@@ -281,7 +285,6 @@ class TransferMoneyView(View):
 
                 # print(
                 #     f"Balance After Transaction: {transaction.balance_after_transaction}")
-
 
                 to_user.balance += amount
                 to_user.save()
