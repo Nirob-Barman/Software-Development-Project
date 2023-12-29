@@ -8,8 +8,26 @@ from django.views import View
 from django.contrib import messages
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 # Create your views here.
 
+
+def send_password_change_mail(user, subject, template):
+    # mail_subject = 'Deposit Message'
+    message = render_to_string(template, {
+        'user': user,
+    })
+    # to_email = to_user
+    # send_email = EmailMessage(mail_subject, message, to=[to_email])
+    send_email = EmailMultiAlternatives(subject, '', to=[user.email])
+    send_email.attach_alternative(message, 'text/html')
+    send_email.send()
 
 class RegistrationView(FormView):
     form_class = UserRegistrationForm
@@ -64,3 +82,30 @@ class UserProfileView(LoginRequiredMixin,View):
             # return render(request, 'accounts/profile.html', {'form': form})
         # return render(request, 'accounts/profile.html', {'form': form})
         return render(request, self.template_name, {'form': form})
+
+
+
+def password_change(request):
+    if request.user.is_authenticated:
+        form = PasswordChangeForm(request.user)
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)
+                messages.success(
+                    request, 'Your password was successfully updated!')
+                
+                send_password_change_mail(
+                    request.user, 
+                    'Password Changed',
+                    'accounts/email_templates/transaction_mail.html'
+                    )
+
+                return redirect('profile')
+            else:
+                messages.error(request, 'Please correct the error below.')
+        return render(request, 'accounts/form.html', {'form': form, 'title': 'Change Your Password', 'button_text': 'Change Password', 'button_class': 'btn-warning'})
+    else:
+        return redirect('home')
+        # return redirect('profile')
