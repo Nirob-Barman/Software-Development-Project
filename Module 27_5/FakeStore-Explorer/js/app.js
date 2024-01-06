@@ -1,27 +1,39 @@
 const loadUsers = () => {
-  fetch("https://fakestoreapi.com/users")
-    .then((res) => res.json())
-    .then((users) => {
-      const userListContainer = document.getElementById("userListContainer");
+    fetch("https://fakestoreapi.com/users")
+      .then((res) => res.json())
+      .then((users) => {
+        const userListContainer = document.getElementById("userListContainer");
 
-      users.forEach((user) => {
-        const userCard = document.createElement("div");
-        userCard.className = "card mb-3";
+        // Create a row container
+        let rowContainer;
 
-        userCard.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">${user.name.firstname} ${user.name.lastname}</h5>
-                <p class="card-text"><strong>Email:</strong> ${user.email}</p>
-                <p class="card-text"><strong>Username:</strong> ${user.username}</p>
-                 <a href="singleUser.html?id=${user.id}" class="btn btn-primary">Details</a>
-                
-            </div>
-        `;
+        users.forEach((user, index) => {
+          // Create a new row for every three cards
+          if (index % 3 === 0) {
+            rowContainer = document.createElement("div");
+            rowContainer.className = "row";
+            userListContainer.appendChild(rowContainer);
+          }
 
-        userListContainer.appendChild(userCard);
+          const userCard = document.createElement("div");
+          userCard.className = "col-md-4 mb-3"; // Adjust the column size based on your layout
+
+          userCard.innerHTML = `
+              <div class="card text-center">
+                  <div class="card-body">
+                      <h5 class="card-title">${user.name.firstname} ${user.name.lastname}</h5>
+                      <p class="card-text"><strong>Email:</strong> ${user.email}</p>
+                      <p class="card-text"><strong>Username:</strong> ${user.username}</p>
+                      <a href="singleUser.html?id=${user.id}" class="btn btn-primary">Details</a>
+                  </div>
+              </div>
+          `;
+
+          // Append the card to the current row
+          rowContainer.appendChild(userCard);
+        });
       });
-    });
-};
+  };
 
 
 
