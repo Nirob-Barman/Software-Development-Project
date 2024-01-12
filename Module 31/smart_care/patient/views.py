@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework import viewsets
 from .models import Patient
-from .serializers import PatientSerializer, RegistrationSerializer
+from .serializers import PatientSerializer, RegistrationSerializer, UserLoginSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.models import User
-
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.authtoken.models import Token
 # for sending email
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -37,7 +38,7 @@ class UserRegistrationView(APIView):
             # confirm_link = f"http://127.0.0.1:8000/activate/{uid}/{token}/"
             # confirm_link = f"http://127.0.0.1:8000/patient/activate/{uid}/{token}/"
             # print("url", f"http://127.0.0.1:8000/patient/active/{uid}/{token}/")
-            confirm_link = f"http://127.0.0.1:8000/patient/active/{uid}/{token}/"
+            confirm_link = f"http://127.0.0.1:8000/patient/activate/{uid}/{token}/"
             email_subject = "Activate your account"
             email_body = render_to_string(
                 'patient/email_templates/confirm_link.html', {'confirm_link': confirm_link}
@@ -53,24 +54,48 @@ class UserRegistrationView(APIView):
         return Response(serializer.errors)
 
 
-# def activate(request, uidb64, token):
 def activate(request, uid64, token):
-    print("uid", uid64, 'token', token)
     try:
-        uid = force_str(urlsafe_base64_decode(uid64))
-        # user = User.objects.get(pk=uid)
+        uid = urlsafe_base64_decode(uid64).decode()
         user = User._default_manager.get(pk=uid)
-        
-    # except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-    except(User.DoesNotExist):
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+    # except (User.DoesNotExist):
         user = None
-    print('uid', uid, 'user', user)
 
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
         # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
-        return redirect("register")
+        return redirect('login')
+        # return redirect('register')
     else:
-        # return HttpResponse('Activation link is invalid!')
-        return redirect("register")
+        return redirect('register')
+
+
+class UserLoginView(APIView):
+    def post(self, request):
+        print("request.data", request.data)
+        print("self.request.data", self.request.data)
+        # serializer = UserLoginSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=self.request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user:
+                token, created = Token.objects.get_or_create(user=user)
+                print("created", created)
+                login(request, user)
+                return Response({'token': token.key, 'user_id': user.id})
+            else:
+                return Response({'error': 'Invalid credentials'})
+        
+        return Response(serializer.errors)
+
+class UserLogoutView(APIView):
+    def get(self, request):
+        request.user.auth_token.delete()
+        logout(request)
+        return redirect('login')
